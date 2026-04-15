@@ -1,0 +1,65 @@
+{
+  "id": "enterprise-bridge",
+  "name": "Enterprise Bridge",
+  "description": "Tenant-aware ingress bridge that normalizes inbound channel messages before forwarding them to an enterprise control plane.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "$defs": {
+      "secretRef": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": ["env", "file", "exec"]
+          },
+          "provider": { "type": "string" },
+          "id": { "type": "string" }
+        },
+        "required": ["source", "provider", "id"]
+      },
+      "secretInput": {
+        "anyOf": [{ "type": "string", "minLength": 1 }, { "$ref": "#/$defs/secretRef" }]
+      },
+      "binding": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "path": { "type": "string", "minLength": 1 },
+          "sessionKey": { "type": "string", "minLength": 1 },
+          "tenantId": { "type": "string", "minLength": 1 },
+          "channel": {
+            "type": "string",
+            "enum": ["dashboard", "webchat", "whatsapp", "email"]
+          },
+          "secret": { "$ref": "#/$defs/secretInput" },
+          "actorUserId": { "type": "string" },
+          "roleId": { "type": "string" },
+          "department": { "type": "string" }
+        },
+        "required": ["sessionKey", "tenantId", "channel", "secret"]
+      }
+    },
+    "properties": {
+      "controlPlane": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "baseUrl": { "type": "string", "minLength": 1 },
+          "apiKey": { "$ref": "#/$defs/secretInput" },
+          "envelopePath": { "type": "string", "minLength": 1 }
+        },
+        "required": ["baseUrl"]
+      },
+      "bindings": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/$defs/binding"
+        }
+      }
+    },
+    "required": ["controlPlane"]
+  }
+}

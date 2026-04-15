@@ -1,0 +1,21 @@
+{
+  "name": "@openclaw/enterprise-bridge",
+  "version": "2026.4.15",
+  "private": true,
+  "description": "Enterprise control-plane bridge for tenant-aware channel envelopes.",
+  "type": "module",
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@openclaw/plugin-sdk": "workspace:*"
+  },
+  "openclaw": {
+    "bundle": {
+      "stageRuntimeDependencies": true
+    },
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
